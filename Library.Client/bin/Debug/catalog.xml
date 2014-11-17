@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<Catalog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CatalogItems>
+    <CatalogItem xsi:type="Book">
+      <Id>593677</Id>
+      <Name>erge</Name>
+      <CreationYear>14</CreationYear>
+      <Author>rtjt</Author>
+    </CatalogItem>
+    <CatalogItem xsi:type="Magazine">
+      <Id>595924</Id>
+      <Name>wbger</Name>
+      <CreationYear>325</CreationYear>
+      <NumberOfIssue>12</NumberOfIssue>
+    </CatalogItem>
+    <CatalogItem xsi:type="Book">
+      <Id>798477</Id>
+      <Name>wewet</Name>
+      <CreationYear>235</CreationYear>
+      <Author>trh</Author>
+    </CatalogItem>
+  </CatalogItems>
+</Catalog>

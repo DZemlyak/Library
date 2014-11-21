@@ -12,5 +12,11 @@ namespace Catalog
             NumberOfIssue = numberOfIssue;
         }
         public Magazine() { }
+
+        public override string ToString()
+        {
+            return string.Format("Журнал\nID: {0}\nНазвание: {1}\nГод выпуска: {2}\nНомер выпуска: {3}\n",
+                Id, Name, CreationYear, NumberOfIssue);
+        }
     }
 }

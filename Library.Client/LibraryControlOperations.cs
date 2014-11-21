@@ -8,14 +8,16 @@ namespace Library.Client
 {
     class LibraryControl
     {
-        public LibraryControl(CatalogController catalog) {
-            var menu = new Dictionary<string, Action<CatalogController>>
-            {
+        private static string _currentCatalog;
+
+        public LibraryControl(CatalogController catalog, string currentCatalog) {
+            _currentCatalog = currentCatalog;
+            var menu = new Dictionary<string, Action<CatalogController>> {
                 {"Добавить", Add},
                 {"Изменить", Update},
                 {"Удалить", Delete},
                 {"Найти", Find},
-                {"Напечатать товары", PrintItems}
+                {"Напечатать товары", PrintItems},
             };
             Menu(catalog, menu);
         }
@@ -124,7 +126,7 @@ namespace Library.Client
                     try {
                         var book = catalog.FindItem(GetId()) as Book;
                         if (book == null) throw new InvalidCastException("Такой товар не найден.");
-                        PrintItem(book);
+                        Console.WriteLine(book);
                     }
                     catch (Exception ex) {
                         Console.WriteLine(ex.Message);
@@ -135,7 +137,7 @@ namespace Library.Client
                     try {
                         var magazine = catalog.FindItem(GetId()) as Magazine;
                         if (magazine == null) throw new InvalidCastException("Такой товар не найден.");
-                        PrintItem(magazine);
+                        Console.WriteLine(magazine);
                     }
                     catch (Exception ex) {
                         Console.WriteLine(ex.Message);
@@ -154,48 +156,55 @@ namespace Library.Client
                     {
                         if (catalog.CatalogItems.Count(w => w.GetType() == typeof (Book)) == 0)
                             throw new Exception("Таких товаров нет.");
+                        Console.WriteLine("*** Книги ***");
+                        Console.WriteLine("-------------------------------");
                         foreach (var item in catalog.CatalogItems
                             .Where(w => w.GetType() == typeof(Book)).Cast<Book>()) {
-                            PrintItem(item);
+                                Console.WriteLine(item);
                         }
                     }
                     catch (Exception ex) {
                         Console.WriteLine(ex.Message);
                     }
+                    Console.WriteLine("\nLEFT - назад.");
                     Console.ReadKey();
                 }},
                 { "Журнал", i => {
                     try {
                         if (catalog.CatalogItems.Count(w => w.GetType() == typeof(Magazine)) == 0)
                             throw new Exception("Таких товаров нет.");
+                        Console.WriteLine("*** Журналы ***");
+                        Console.WriteLine("-------------------------------");
                         foreach (var item in catalog.CatalogItems
                             .Where(w => w.GetType() == typeof(Magazine)).Cast<Magazine>()) {
-                            PrintItem(item);
+                                Console.WriteLine(item);
                         }
                     }
                     catch (Exception ex) {
                         Console.WriteLine(ex.Message);
                     }
+                    Console.WriteLine("\nLEFT - назад.");
                     Console.ReadKey();
                 }},
                 { "Все товары", i => {
                     try {
                         if (!catalog.CatalogItems.Any())
                             throw new Exception("Таких товаров нет.");
-
+                        Console.WriteLine("*** Все товары ***");
+                        Console.WriteLine("-------------------------------");
                         foreach (var item in catalog.CatalogItems
                             .Where(w => w.GetType() == typeof(Magazine)).Cast<Magazine>()) {
-                            PrintItem(item);
+                                Console.WriteLine(item);
                         }
-
                         foreach (var item in catalog.CatalogItems
                             .Where(w => w.GetType() == typeof(Book)).Cast<Book>()) {
-                            PrintItem(item);
+                                Console.WriteLine(item);
                         }
                     }
                     catch (Exception ex) {
                         Console.WriteLine(ex.Message);
                     }
+                    Console.WriteLine("\nLEFT - назад.");
                     Console.ReadKey();
                 }},
             };
@@ -212,41 +221,37 @@ namespace Library.Client
                 Console.CursorVisible = false;
                 Console.Clear();
                 PrintMenu(menu, position);
-                Console.SetCursorPosition(0, Console.WindowHeight - 2);
-                Console.WriteLine("Enter - выбор пункта меню. ESC - назад/выход.");
                 var key = Console.ReadKey();
-                if (key.Key == ConsoleKey.UpArrow && position != 1) position--;
-                if (key.Key == ConsoleKey.DownArrow && position != menu.Count) position++;
-                if (key.Key == ConsoleKey.Escape) break;
+                if (key.Key == ConsoleKey.UpArrow) {
+                    position--;
+                    if (position == 0)
+                        position = menu.Count;
+                }
+                if (key.Key == ConsoleKey.DownArrow) {
+                    if (position == menu.Count)
+                        position = 0;
+                    position++;
+                }
+                if (key.Key == ConsoleKey.LeftArrow) break;
                 if (key.Key != ConsoleKey.Enter) continue;
                 Console.Clear();
                 Console.CursorVisible = true;
                 menu.ElementAt(position - 1).Value(catalog);
-            }
-            while (true);
+            } while (true);
         }
         
         private static void PrintMenu(Dictionary<string, Action<CatalogController>> menu, int position)
         {
             var i = 1;
-            Console.WriteLine("\t\t*** Каталог товаров ***");
+            Console.WriteLine("*** Меню ***\tКаталог: " + _currentCatalog);
+            Console.WriteLine("-------------------------------");
             foreach (var m in menu) {
-                Console.Write(i == position ? "> " : " ");
+                Console.Write(i == position ? " -> " : "    ");
                 Console.WriteLine(m.Key);
                 i++;
             }
-        }
-
-        private static void PrintItem(Book book) {
-            Console.WriteLine("Книга:");
-            Console.WriteLine("ID: {0}\nНазвание: {1}\nГод выпуска: {2}\nАвтор: {3}\n",
-                book.Id, book.Name, book.CreationYear, book.Author);
-        }
-
-        private static void PrintItem(Magazine magazine) {
-            Console.WriteLine("Журнал:");
-            Console.WriteLine("ID: {0}\nНазвание: {1}\nГод выпуска: {2}\nНомер выпуска: {3}\n",
-                magazine.Id, magazine.Name, magazine.CreationYear, magazine.NumberOfIssue);
+            Console.SetCursorPosition(0, Console.WindowHeight - 2);
+            Console.WriteLine("UP/DOWN - вверх/вниз. LEFT - назад/выход. ENTER - выбор.");
         }
         
         public static int GetId() {

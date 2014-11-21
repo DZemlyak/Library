@@ -13,5 +13,11 @@ namespace Catalog
                 Author = author;
         }
         public Book() { }
+
+        public override string ToString()
+        {
+            return string.Format("Книга\nID: {0}\nНазвание: {1}\nГод выпуска: {2}\nАвтор: {3}\n", 
+                Id, Name, CreationYear, Author);
+        }
     }
 }

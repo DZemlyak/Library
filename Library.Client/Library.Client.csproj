@@ -41,7 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CatalogFileContol.cs" />
+    <Compile Include="CatalogFileControl.cs" />
     <Compile Include="LibraryObjectsCreator.cs" />
     <Compile Include="LibraryControlOperations.cs" />
     <Compile Include="Program.cs" />
@@ -51,9 +51,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Catalog\Catalog.Library.csproj">
+    <ProjectReference Include="..\Catalog\Library.Catalog.csproj">
       <Project>{9fcf6888-fecc-43f5-a255-eaf80fd48356}</Project>
-      <Name>Catalog.Library</Name>
+      <Name>Library.Catalog</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

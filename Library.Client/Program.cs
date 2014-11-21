@@ -1,12 +1,15 @@
-﻿namespace Library.Client
+﻿using Catalog;
+
+namespace Library.Client
 {
     class Program
     {
         static void Main(string[] args)
         {
-            var catalog = CatalogFileContol.FindCatalog();
-            new LibraryControl(catalog);
-            CatalogFileContol.SaveCatalog(catalog);
+            string catalogName;        
+            var catalog = CatalogFileControl.LoadCatalog(new CatalogXmlSerialization(), out catalogName);
+            new LibraryControl(catalog, catalogName);
+            CatalogFileControl.SaveCatalog(new CatalogXmlSerialization(), catalog);
         }
     }
 }

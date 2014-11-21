@@ -45,6 +45,7 @@
     <Compile Include="CatalogXmlSerialization.cs" />
     <Compile Include="LibraryCollection.cs" />
     <Compile Include="Catalog.cs" />
+    <Compile Include="LibraryCollectionEnumerator.cs" />
     <Compile Include="Magazine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

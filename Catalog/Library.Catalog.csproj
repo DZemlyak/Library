@@ -7,8 +7,8 @@
     <ProjectGuid>{9FCF6888-FECC-43F5-A255-EAF80FD48356}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Catalog</RootNamespace>
-    <AssemblyName>Catalog</AssemblyName>
+    <RootNamespace>Library.Catalog</RootNamespace>
+    <AssemblyName>Library.Catalog</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -43,11 +43,15 @@
     <Compile Include="CatalogItem.cs" />
     <Compile Include="ICatalogSerialization.cs" />
     <Compile Include="CatalogXmlSerialization.cs" />
+    <Compile Include="IdGenerator.cs" />
     <Compile Include="LibraryCollection.cs" />
     <Compile Include="Catalog.cs" />
     <Compile Include="LibraryCollectionEnumerator.cs" />
     <Compile Include="Magazine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

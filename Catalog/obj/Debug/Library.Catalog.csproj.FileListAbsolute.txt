@@ -1,5 +1,6 @@
-E:\Учеба\NixSolutions\Study\Library\Catalog\bin\Debug\Catalog.dll
-E:\Учеба\NixSolutions\Study\Library\Catalog\bin\Debug\Catalog.pdb
 E:\Учеба\NixSolutions\Study\Library\Catalog\obj\Debug\Library.Catalog.csprojResolveAssemblyReference.cache
-E:\Учеба\NixSolutions\Study\Library\Catalog\obj\Debug\Catalog.dll
-E:\Учеба\NixSolutions\Study\Library\Catalog\obj\Debug\Catalog.pdb
+E:\Учеба\NixSolutions\Study\Library\Catalog\bin\Debug\Library.Catalog.dll
+E:\Учеба\NixSolutions\Study\Library\Catalog\bin\Debug\Library.Catalog.pdb
+E:\Учеба\NixSolutions\Study\Library\Catalog\obj\Debug\Library.Catalog.dll
+E:\Учеба\NixSolutions\Study\Library\Catalog\obj\Debug\Library.Catalog.pdb
+E:\Учеба\NixSolutions\Study\Library\Catalog\bin\Debug\Library.Catalog.dll.config

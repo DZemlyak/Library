@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Catalog
+namespace Library.Catalog
 {
     [Serializable]
     public class LibraryCollection<T> : ICollection<T> where T: CatalogItem
@@ -24,14 +24,6 @@ namespace Catalog
 
         public void Add(T item)
         {
-            if (Count != 0) {
-                for (int i = 0; i < Count; i++) {
-                    var catalogItem = _objects[i] as CatalogItem;
-                    if (catalogItem != null && catalogItem.Id == item.Id)
-                        throw new ArgumentException("Товар с таким ID уже существует. Повторите добавление товара.");
-                }
-            }
- 
             if (Count >= _objects.Length) {
                 var temp = new object[_objects.Length + Size];
                 for (int i = 0; i < Count; i++) {
@@ -60,7 +52,7 @@ namespace Catalog
 
         public bool Remove(T item) {
             for (int i = 0; i < Count; i++) {
-                if (((T)_objects[i]).Id != item.Id) continue;;
+                if (((T)_objects[i]).Id != item.Id) continue;
                 RemoveAt(i);
                 return true;
             }

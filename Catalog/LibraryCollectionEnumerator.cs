@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace Catalog
+namespace Library.Catalog
 {
     class LibraryCollectionEnumerator<T> : IEnumerator<T> where T : CatalogItem
     {

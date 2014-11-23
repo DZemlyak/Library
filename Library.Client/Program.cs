@@ -1,4 +1,4 @@
-﻿using Catalog;
+﻿using Library.Catalog;
 
 namespace Library.Client
 {
@@ -6,10 +6,11 @@ namespace Library.Client
     {
         static void Main(string[] args)
         {
-            string catalogName;        
-            var catalog = CatalogFileControl.LoadCatalog(new CatalogXmlSerialization(), out catalogName);
-            new LibraryControl(catalog, catalogName);
-            CatalogFileControl.SaveCatalog(new CatalogXmlSerialization(), catalog);
+            var serializer = new CatalogXmlSerialization();
+            var catalog = LibraryFileControl.LoadCatalogAsync(serializer).Result;
+            IdGenerator.SetId(catalog);
+            new LibraryMenuControl(catalog, serializer);
+            LibraryFileControl.SaveCatalog(serializer, catalog);
         }
     }
 }

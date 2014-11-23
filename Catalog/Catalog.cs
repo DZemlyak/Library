@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace Catalog
+namespace Library.Catalog
 {
     [Serializable]
     public class Catalog
@@ -24,26 +24,15 @@ namespace Catalog
             _catalog.Remove(item);
         }
 
-        public void Update(CatalogItem item)
-        {
+        public void Update(CatalogItem item) {
             var index = _catalog.IndexOf(item);
             if (index != -1) {
                 _catalog[index] = item;
             }
         }
 
-        public CatalogItem FindItem(CatalogItem item) {
-            var index = _catalog.IndexOf(item);
-            return index != -1 ? _catalog[index] : null;
-        }
-
         public CatalogItem FindItem(int id) {
             return _catalog.FirstOrDefault(f => f.Id == id);
-        }
-
-        public object this[int index] {
-            get { return _catalog[index]; }
-            set { _catalog[index] = (CatalogItem) value; }
         }
     }
 }

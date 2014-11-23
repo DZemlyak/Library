@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace Catalog
+namespace Library.Catalog
 {
     public interface ICatalogSerialization
     {

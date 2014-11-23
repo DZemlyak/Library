@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Catalog;
+using System.Threading.Tasks;
+using Library.Catalog;
 
 namespace Library.Client
 {
-    static class CatalogFileControl
+    static class LibraryFileControl
     {
         private static string _path;
+        private const string DefaultPath = "newcatalog.xml";
+
         private static readonly Dictionary<int, string> _catalogs 
             = new Dictionary<int, string>();
 
@@ -16,22 +19,24 @@ namespace Library.Client
         /// Загружает один из файлов каталога
         /// </summary>
         /// <param name="serializer"></param>
-        /// <param name="catalogName"></param>
         /// <returns></returns>
-        public static Catalog.Catalog LoadCatalog(ICatalogSerialization serializer, out string catalogName)
+        async public static Task<Catalog.Catalog> LoadCatalogAsync(ICatalogSerialization serializer)
         {
-            _path = ListCatalogs();
-
             try {
-                catalogName = _path;
-                return serializer.DeserializeCatalog(_path, FileMode.Open);
+                _path = ListCatalogs();
+                return await Task.Run(() => serializer.DeserializeCatalog(_path, FileMode.Open));
+            }
+            catch (FileNotFoundException ex) {
+                Console.WriteLine(ex.Message);
             }
             catch (Exception) {
                 Console.WriteLine("Каталог не может быть загружен.");
             }
-
+            finally {
+                Console.WriteLine("Нажмите любую клавишу для продолжения...");
+            }
             Console.ReadKey();
-            _path = catalogName = "NewCatalog.xml";
+            _path = DefaultPath;
             return new Catalog.Catalog();
         }
 
@@ -42,7 +47,7 @@ namespace Library.Client
         /// <param name="catalog"></param>
         public static void SaveCatalog(ICatalogSerialization serializer, Catalog.Catalog catalog)
         {
-            var res = String.Empty;
+            string res;
             Console.Clear();
             Console.CursorVisible = true;
             Console.WriteLine("Сохранение каталога.");
@@ -56,15 +61,21 @@ namespace Library.Client
                 Console.Write("Перезаписать текущий каталог {0}? ", _path);
                 res = Console.ReadLine();
                 if (res != null && res.ToLower() == "y") {
-                    Save(serializer, catalog, _path);
+                    Save(serializer, catalog);
+                    Console.ReadKey();
                     return;
                 }
+            }
+            Console.Write("Создать новый каталог? ");
+            res = Console.ReadLine();
+            if (res != null && res.ToLower() == "y") {
                 _path = GetNewPath();
-                Save(serializer, catalog, _path);
+                Save(serializer, catalog);
+                Console.ReadKey();
                 return;
             }
-            _path = GetNewPath();
-            Save(serializer, catalog, _path);
+            Console.WriteLine("Каталог не сохранен.");
+            Console.ReadKey();
         }
 
         #region Deserialize Help Methods
@@ -77,6 +88,7 @@ namespace Library.Client
         {
             var position = 1;
             var files = GetCatalogsNames();
+            if (files.Length == 0) throw new FileNotFoundException("Каталоги не найдены.");
             do {
                 Console.CursorVisible = false;
                 PrintCatalogs(files, position);
@@ -133,11 +145,21 @@ namespace Library.Client
         /// </summary>
         /// <param name="serializer"></param>
         /// <param name="catalog"></param>
-        /// <param name="path"></param>
-        private static void Save(ICatalogSerialization serializer, Catalog.Catalog catalog, string path)
+        private static void Save(ICatalogSerialization serializer, Catalog.Catalog catalog)
         {
             try {
                 serializer.SerializeCatalog(catalog, _path, FileMode.Create);
+                Console.WriteLine("Каталог {0} сохранен.", _path);
+            }
+            catch (Exception) {
+                Console.WriteLine("Каталог {0} не сохранен.", _path);
+            }
+        }
+
+        public async static void SaveAsync(ICatalogSerialization serializer, Catalog.Catalog catalog)
+        {
+            try {
+                await Task.Run(() => serializer.SerializeCatalog(catalog, _path, FileMode.Create));
                 Console.WriteLine("Каталог {0} сохранен.", _path);
             }
             catch (Exception) {

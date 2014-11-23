@@ -1,8 +1,8 @@
 E:\Учеба\NixSolutions\Study\Library\Library.Client\bin\Debug\Library.Client.exe.config
 E:\Учеба\NixSolutions\Study\Library\Library.Client\bin\Debug\Library.Client.exe
 E:\Учеба\NixSolutions\Study\Library\Library.Client\bin\Debug\Library.Client.pdb
-E:\Учеба\NixSolutions\Study\Library\Library.Client\bin\Debug\Catalog.dll
-E:\Учеба\NixSolutions\Study\Library\Library.Client\bin\Debug\Catalog.pdb
 E:\Учеба\NixSolutions\Study\Library\Library.Client\obj\Debug\Library.Client.csprojResolveAssemblyReference.cache
 E:\Учеба\NixSolutions\Study\Library\Library.Client\obj\Debug\Library.Client.exe
 E:\Учеба\NixSolutions\Study\Library\Library.Client\obj\Debug\Library.Client.pdb
+E:\Учеба\NixSolutions\Study\Library\Library.Client\bin\Debug\Library.Catalog.dll
+E:\Учеба\NixSolutions\Study\Library\Library.Client\bin\Debug\Library.Catalog.pdb

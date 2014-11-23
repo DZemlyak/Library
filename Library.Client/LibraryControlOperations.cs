@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Catalog;
-using CatalogController = Catalog.Catalog;
+using Library.Catalog;
+using CatalogController = Library.Catalog.Catalog;
 
 namespace Library.Client
 {
-    class LibraryControl
+    class LibraryMenuControl
     {
-        private static string _currentCatalog;
+        private readonly ICatalogSerialization _serializer;
 
-        public LibraryControl(CatalogController catalog, string currentCatalog) {
-            _currentCatalog = currentCatalog;
+        private delegate void OnChangeSaver(ICatalogSerialization serializer, Catalog.Catalog catalog);
+        private event OnChangeSaver Saver = LibraryFileControl.SaveAsync;
+
+        public LibraryMenuControl(CatalogController catalog, ICatalogSerialization serializer) {
+            _serializer = serializer;
             var menu = new Dictionary<string, Action<CatalogController>> {
                 {"Добавить", Add},
                 {"Изменить", Update},
@@ -24,15 +27,16 @@ namespace Library.Client
 
         #region Пункты меню
 
-        private static void Add(CatalogController catalog)
+        private void Add(CatalogController catalog)
         {
-
             var menu = new Dictionary<string, Action<CatalogController>> {
                 { "Книга", i => {
                     try {
                         var book = LibraryObjectsCreator.CreateBook();
                         catalog.Add(book);
-                        Console.WriteLine("Книга добавлена.");
+                        Saver(_serializer, catalog);
+                        Console.WriteLine("\nКнига добавлена.");
+                        Console.WriteLine("\nНажмите любую клавишу.");
                     }
                     catch (Exception ex) {
                         Console.WriteLine(ex.Message);
@@ -43,7 +47,9 @@ namespace Library.Client
                     try {
                         var magazine = LibraryObjectsCreator.CreateMagazine();
                         catalog.Add(magazine);
-                        Console.WriteLine("Журнал добавлен.");
+                        Saver(_serializer, catalog);
+                        Console.WriteLine("\nЖурнал добавлен.");
+                        Console.WriteLine("\nНажмите любую клавишу.");
                     }
                     catch (Exception ex) {
                         Console.WriteLine(ex.Message);
@@ -54,7 +60,7 @@ namespace Library.Client
             Menu(catalog, menu);
         }
 
-        private static void Update(CatalogController catalog)
+        private void Update(CatalogController catalog)
         {
             var menu = new Dictionary<string, Action<CatalogController>> {
                 { "Книга", i => {
@@ -64,7 +70,9 @@ namespace Library.Client
                         if(book == null) throw new InvalidCastException("Такой товар не найден.");
                         LibraryObjectsCreator.CreateBook(book);
                         catalog.Update(book);
-                        Console.WriteLine("Данные о книге обновлены.");
+                        Saver(_serializer, catalog);
+                        Console.WriteLine("\nДанные о книге обновлены.");
+                        Console.WriteLine("\nНажмите любую клавишу.");
                     }
                     catch (Exception ex) {
                         Console.WriteLine(ex.Message);
@@ -77,7 +85,9 @@ namespace Library.Client
                         if (magazine == null) throw new InvalidCastException("Такой товар не найден.");
                         LibraryObjectsCreator.CreateMagazine(magazine);
                         catalog.Update(magazine);
-                        Console.WriteLine("Данные о журнале обновлены.");
+                        Saver(_serializer, catalog);
+                        Console.WriteLine("\nДанные о журнале обновлены.");
+                        Console.WriteLine("\nНажмите любую клавишу.");
                     }
                     catch (Exception ex) {
                         Console.WriteLine(ex.Message);
@@ -88,7 +98,7 @@ namespace Library.Client
             Menu(catalog, menu);
         }
 
-        private static void Delete(CatalogController catalog)
+        private void Delete(CatalogController catalog)
         {
             var menu = new Dictionary<string, Action<CatalogController>> {
                 { "Книга", i => {
@@ -96,7 +106,9 @@ namespace Library.Client
                         var book = catalog.FindItem(GetId()) as Book;
                         if (book == null) throw new InvalidCastException("Такой товар не найден.");
                         catalog.Delete(book);
-                        Console.WriteLine("Книга удалена.");
+                        Saver(_serializer, catalog);
+                        Console.WriteLine("\nКнига удалена.");
+                        Console.WriteLine("\nНажмите любую клавишу.");
                     }
                     catch (Exception ex) {
                         Console.WriteLine(ex.Message);
@@ -108,7 +120,9 @@ namespace Library.Client
                         var magazine = catalog.FindItem(GetId()) as Magazine;
                         if (magazine == null) throw new InvalidCastException("Такой товар не найден.");
                         catalog.Delete(magazine);
-                        Console.WriteLine("Журнал удален.");
+                        Saver(_serializer, catalog);
+                        Console.WriteLine("\nЖурнал удален.");
+                        Console.WriteLine("\nНажмите любую клавишу.");
                     }
                     catch (Exception ex) {
                         Console.WriteLine(ex.Message);
@@ -119,36 +133,42 @@ namespace Library.Client
             Menu(catalog, menu);
         }
 
-        private static void Find(CatalogController catalog)
+        private void Find(CatalogController catalog)
         {
             var menu = new Dictionary<string, Action<CatalogController>> {
                 { "Книга", i => {
                     try {
                         var book = catalog.FindItem(GetId()) as Book;
                         if (book == null) throw new InvalidCastException("Такой товар не найден.");
+                        Console.CursorVisible = false;
+                        Console.Clear();
                         Console.WriteLine(book);
                     }
                     catch (Exception ex) {
                         Console.WriteLine(ex.Message);
                     }
+                    Console.WriteLine("\nНажмите любую клавишу.");
                     Console.ReadKey();
                 }},
                 { "Журнал", i => {
                     try {
                         var magazine = catalog.FindItem(GetId()) as Magazine;
                         if (magazine == null) throw new InvalidCastException("Такой товар не найден.");
+                        Console.CursorVisible = false;
+                        Console.Clear();
                         Console.WriteLine(magazine);
                     }
                     catch (Exception ex) {
                         Console.WriteLine(ex.Message);
                     }
+                    Console.WriteLine("\nНажмите любую клавишу.");
                     Console.ReadKey();
                 }},
             };
             Menu(catalog, menu);
         }
 
-        private static void PrintItems(CatalogController catalog)
+        private void PrintItems(CatalogController catalog)
         {
             var menu = new Dictionary<string, Action<CatalogController>> {
                 { "Книга", i => {
@@ -166,7 +186,7 @@ namespace Library.Client
                     catch (Exception ex) {
                         Console.WriteLine(ex.Message);
                     }
-                    Console.WriteLine("\nLEFT - назад.");
+                    Console.WriteLine("\nНажмите любую клавишу.");
                     Console.ReadKey();
                 }},
                 { "Журнал", i => {
@@ -183,7 +203,7 @@ namespace Library.Client
                     catch (Exception ex) {
                         Console.WriteLine(ex.Message);
                     }
-                    Console.WriteLine("\nLEFT - назад.");
+                    Console.WriteLine("\nНажмите любую клавишу.");
                     Console.ReadKey();
                 }},
                 { "Все товары", i => {
@@ -204,7 +224,7 @@ namespace Library.Client
                     catch (Exception ex) {
                         Console.WriteLine(ex.Message);
                     }
-                    Console.WriteLine("\nLEFT - назад.");
+                    Console.WriteLine("\nНажмите любую клавишу.");
                     Console.ReadKey();
                 }},
             };
@@ -243,14 +263,14 @@ namespace Library.Client
         private static void PrintMenu(Dictionary<string, Action<CatalogController>> menu, int position)
         {
             var i = 1;
-            Console.WriteLine("*** Меню ***\tКаталог: " + _currentCatalog);
+            Console.WriteLine("*** Меню ***");
             Console.WriteLine("-------------------------------");
             foreach (var m in menu) {
                 Console.Write(i == position ? " -> " : "    ");
                 Console.WriteLine(m.Key);
                 i++;
             }
-            Console.SetCursorPosition(0, Console.WindowHeight - 2);
+            Console.SetCursorPosition(0, Console.WindowHeight - 3);
             Console.WriteLine("UP/DOWN - вверх/вниз. LEFT - назад/выход. ENTER - выбор.");
         }
         

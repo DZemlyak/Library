@@ -2,14 +2,14 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Xml.Serialization;
 
-namespace Catalog
+namespace Library.Catalog
 {
     public class CatalogXmlSerialization : ICatalogSerialization
     {
-        public void SerializeCatalog(Catalog catalog, string path, FileMode fm)
-        {
+        public void SerializeCatalog(Catalog catalog, string path, FileMode fm) {
             using (var fs = new FileStream(path, fm)) {
                 var types = GetSubclassTypesOfCatalog();
                 var serializer = new XmlSerializer(typeof(Catalog), types);

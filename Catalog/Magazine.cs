@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Catalog
+namespace Library.Catalog
 {
     [Serializable]
     public class Magazine : CatalogItem
@@ -15,8 +15,7 @@ namespace Catalog
 
         public override string ToString()
         {
-            return string.Format("Журнал\nID: {0}\nНазвание: {1}\nГод выпуска: {2}\nНомер выпуска: {3}\n",
-                Id, Name, CreationYear, NumberOfIssue);
+            return string.Format("Журнал\n") + base.ToString() + string.Format("Номер выпуска: {0}\n", NumberOfIssue);
         }
     }
 }

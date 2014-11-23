@@ -1,5 +1,5 @@
 ﻿using System;
-using Catalog;
+using Library.Catalog;
 
 namespace Library.Client
 {
@@ -27,10 +27,11 @@ namespace Library.Client
             GetGeneralData(out name, out year);
             Console.Write("Номер выпуска: ");
             var temp = Console.ReadLine();
-            if (!int.TryParse(temp, out numberOfIssue)) {
-                throw new ArgumentException("Неверный номер выпуска!");
+            while (!int.TryParse(temp, out numberOfIssue)) {
+                Console.Write("\nНеверный номер выпуска!\n");
+                Console.Write("Номер выпуска: ");
+                temp = Console.ReadLine();
             }
-
             if (magazine == null) return new Magazine(name, year, numberOfIssue);
             magazine.Name = name;
             magazine.CreationYear = year;
@@ -45,8 +46,10 @@ namespace Library.Client
             name = Console.ReadLine();
             Console.Write("Год выпуска: ");
             var temp = Console.ReadLine();
-            if (!int.TryParse(temp, out creationYear)) {
-                throw new ArgumentException("Неверный год выпуска!");
+            while (!int.TryParse(temp, out creationYear)) {
+                Console.WriteLine("\nНеверный год выпуска!\n");
+                Console.Write("Год выпуска: ");
+                temp = Console.ReadLine();
             }
         }
     }

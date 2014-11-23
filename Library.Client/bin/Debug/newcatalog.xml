@@ -1,17 +1,11 @@
 <?xml version="1.0"?>
 <Catalog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <CatalogItems>
-    <CatalogItem xsi:type="Book">
-      <Id>492003</Id>
-      <Name>wefew</Name>
-      <CreationYear>23</CreationYear>
-      <Author>qwer</Author>
-    </CatalogItem>
     <CatalogItem xsi:type="Magazine">
-      <Id>752168</Id>
-      <Name />
-      <CreationYear>234</CreationYear>
-      <NumberOfIssue>34</NumberOfIssue>
+      <Id>100000</Id>
+      <Name>ewhgg</Name>
+      <CreationYear>535</CreationYear>
+      <NumberOfIssue>3</NumberOfIssue>
     </CatalogItem>
   </CatalogItems>
 </Catalog>

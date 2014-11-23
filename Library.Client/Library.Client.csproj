@@ -41,7 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CatalogFileControl.cs" />
+    <Compile Include="LibraryFileControl.cs" />
     <Compile Include="LibraryObjectsCreator.cs" />
     <Compile Include="LibraryControlOperations.cs" />
     <Compile Include="Program.cs" />

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Catalog
+namespace Library.Catalog
 {
     [Serializable]
     
@@ -16,8 +16,7 @@ namespace Catalog
 
         public override string ToString()
         {
-            return string.Format("Книга\nID: {0}\nНазвание: {1}\nГод выпуска: {2}\nАвтор: {3}\n", 
-                Id, Name, CreationYear, Author);
+            return string.Format("Книга\n") + base.ToString() + string.Format("Автор: {0}\n", Author);
         }
     }
 }

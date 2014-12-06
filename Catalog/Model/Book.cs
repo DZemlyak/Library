@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Library.Catalog
+namespace Library.Catalog.Model
 {
     [Serializable]
     
@@ -8,7 +8,7 @@ namespace Library.Catalog
     {
         public string Author { get; set; }
 
-        public Book(string name, int date, string author) 
+        public Book(string name, DateTime date, string author) 
             : base(name, date) {
                 Author = author;
         }

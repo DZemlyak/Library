@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace Library.Catalog
+namespace Library.Catalog.Model
 {
     [Serializable]
     public class Magazine : CatalogItem
     {
         public int NumberOfIssue { get; set; }
 
-        public Magazine(string name, int date, int numberOfIssue) 
+        public Magazine(string name, DateTime date, int numberOfIssue) 
             : base(name, date) {
             NumberOfIssue = numberOfIssue;
         }

@@ -1,20 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Library.Catalog;
-using CatalogController = Library.Catalog.Catalog;
+using Library.Catalog.Model;
+using Library.Catalog.Repository;
+using CatalogController = System.Collections.Generic.List<Library.Catalog.Model.CatalogItem>;
 
 namespace Library.Client
 {
-    class LibraryMenuControl
+    public static class LibraryMenuControl
     {
-        private readonly ICatalogSerialization _serializer;
+        private static CatalogController _catalog;
+        private static readonly RepositoryHelper _repository = new RepositoryHelper();
 
-        private delegate void OnChangeSaver(ICatalogSerialization serializer, Catalog.Catalog catalog);
-        private event OnChangeSaver Saver = LibraryFileControl.SaveAsync;
-
-        public LibraryMenuControl(CatalogController catalog, ICatalogSerialization serializer) {
-            _serializer = serializer;
+        public static void StartLibrary() {
+            _catalog = _repository.LoadCatalog();
             var menu = new Dictionary<string, Action<CatalogController>> {
                 {"Добавить", Add},
                 {"Изменить", Update},
@@ -22,19 +21,19 @@ namespace Library.Client
                 {"Найти", Find},
                 {"Напечатать товары", PrintItems},
             };
-            Menu(catalog, menu);
+            Menu(_catalog, menu);
         }
 
         #region Пункты меню
 
-        private void Add(CatalogController catalog)
+        private static void Add(CatalogController catalog)
         {
             var menu = new Dictionary<string, Action<CatalogController>> {
                 { "Книга", i => {
                     try {
                         var book = LibraryObjectsCreator.CreateBook();
+                        _repository.BookRepository.Create(ref book);
                         catalog.Add(book);
-                        Saver(_serializer, catalog);
                         Console.WriteLine("\nКнига добавлена.");
                         Console.WriteLine("\nНажмите любую клавишу.");
                     }
@@ -46,8 +45,8 @@ namespace Library.Client
                 { "Журнал", i => {
                     try {
                         var magazine = LibraryObjectsCreator.CreateMagazine();
+                        _repository.MagazineRepository.Create(ref magazine);
                         catalog.Add(magazine);
-                        Saver(_serializer, catalog);
                         Console.WriteLine("\nЖурнал добавлен.");
                         Console.WriteLine("\nНажмите любую клавишу.");
                     }
@@ -60,17 +59,16 @@ namespace Library.Client
             Menu(catalog, menu);
         }
 
-        private void Update(CatalogController catalog)
+        private static void Update(CatalogController catalog)
         {
             var menu = new Dictionary<string, Action<CatalogController>> {
                 { "Книга", i => {
-                    try
-                    {
-                        var book = catalog.FindItem(GetId()) as Book;
+                    try {
+                        var id = GetId();
+                        var book = catalog.Find(f => f.Id == id) as Book;
                         if(book == null) throw new InvalidCastException("Такой товар не найден.");
                         LibraryObjectsCreator.CreateBook(book);
-                        catalog.Update(book);
-                        Saver(_serializer, catalog);
+                        _repository.BookRepository.Update(book);
                         Console.WriteLine("\nДанные о книге обновлены.");
                         Console.WriteLine("\nНажмите любую клавишу.");
                     }
@@ -81,11 +79,11 @@ namespace Library.Client
                 }},
                 { "Журнал", i => {
                     try {
-                        var magazine = catalog.FindItem(GetId()) as Magazine;
+                        var id = GetId();
+                        var magazine = catalog.Find(f => f.Id == id) as Magazine;
                         if (magazine == null) throw new InvalidCastException("Такой товар не найден.");
                         LibraryObjectsCreator.CreateMagazine(magazine);
-                        catalog.Update(magazine);
-                        Saver(_serializer, catalog);
+                        _repository.MagazineRepository.Update(magazine);
                         Console.WriteLine("\nДанные о журнале обновлены.");
                         Console.WriteLine("\nНажмите любую клавишу.");
                     }
@@ -98,15 +96,17 @@ namespace Library.Client
             Menu(catalog, menu);
         }
 
-        private void Delete(CatalogController catalog)
+        private static void Delete(CatalogController catalog)
         {
             var menu = new Dictionary<string, Action<CatalogController>> {
                 { "Книга", i => {
-                    try {
-                        var book = catalog.FindItem(GetId()) as Book;
+                    try
+                    {
+                        var id = GetId();
+                        var book = catalog.Find(f => f.Id == id) as Book;
                         if (book == null) throw new InvalidCastException("Такой товар не найден.");
-                        catalog.Delete(book);
-                        Saver(_serializer, catalog);
+                        _repository.BookRepository.Delete(id);
+                        catalog.Remove(book);
                         Console.WriteLine("\nКнига удалена.");
                         Console.WriteLine("\nНажмите любую клавишу.");
                     }
@@ -117,10 +117,11 @@ namespace Library.Client
                 }},
                 { "Журнал", i => {
                     try {
-                        var magazine = catalog.FindItem(GetId()) as Magazine;
+                        var id = GetId();
+                        var magazine = catalog.Find(f => f.Id == id) as Magazine;
                         if (magazine == null) throw new InvalidCastException("Такой товар не найден.");
-                        catalog.Delete(magazine);
-                        Saver(_serializer, catalog);
+                        _repository.MagazineRepository.Delete(id);
+                        catalog.Remove(magazine);
                         Console.WriteLine("\nЖурнал удален.");
                         Console.WriteLine("\nНажмите любую клавишу.");
                     }
@@ -133,12 +134,14 @@ namespace Library.Client
             Menu(catalog, menu);
         }
 
-        private void Find(CatalogController catalog)
+        private static void Find(CatalogController catalog)
         {
             var menu = new Dictionary<string, Action<CatalogController>> {
                 { "Книга", i => {
-                    try {
-                        var book = catalog.FindItem(GetId()) as Book;
+                    try
+                    {
+                        var id = GetId();
+                        var book = catalog.Find(f => f.Id == id) as Book;
                         if (book == null) throw new InvalidCastException("Такой товар не найден.");
                         Console.CursorVisible = false;
                         Console.Clear();
@@ -152,7 +155,8 @@ namespace Library.Client
                 }},
                 { "Журнал", i => {
                     try {
-                        var magazine = catalog.FindItem(GetId()) as Magazine;
+                        var id = GetId();
+                        var magazine = catalog.Find(f => f.Id == id) as Magazine;
                         if (magazine == null) throw new InvalidCastException("Такой товар не найден.");
                         Console.CursorVisible = false;
                         Console.Clear();
@@ -168,17 +172,17 @@ namespace Library.Client
             Menu(catalog, menu);
         }
 
-        private void PrintItems(CatalogController catalog)
+        private static void PrintItems(CatalogController catalog)
         {
             var menu = new Dictionary<string, Action<CatalogController>> {
                 { "Книга", i => {
                     try
                     {
-                        if (catalog.CatalogItems.Count(w => w.GetType() == typeof (Book)) == 0)
+                        if (catalog.Count(w => w.GetType() == typeof (Book)) == 0)
                             throw new Exception("Таких товаров нет.");
                         Console.WriteLine("*** Книги ***");
                         Console.WriteLine("-------------------------------");
-                        foreach (var item in catalog.CatalogItems
+                        foreach (var item in catalog
                             .Where(w => w.GetType() == typeof(Book)).Cast<Book>()) {
                                 Console.WriteLine(item);
                         }
@@ -191,11 +195,11 @@ namespace Library.Client
                 }},
                 { "Журнал", i => {
                     try {
-                        if (catalog.CatalogItems.Count(w => w.GetType() == typeof(Magazine)) == 0)
+                        if (catalog.Count(w => w.GetType() == typeof(Magazine)) == 0)
                             throw new Exception("Таких товаров нет.");
                         Console.WriteLine("*** Журналы ***");
                         Console.WriteLine("-------------------------------");
-                        foreach (var item in catalog.CatalogItems
+                        foreach (var item in catalog
                             .Where(w => w.GetType() == typeof(Magazine)).Cast<Magazine>()) {
                                 Console.WriteLine(item);
                         }
@@ -208,15 +212,15 @@ namespace Library.Client
                 }},
                 { "Все товары", i => {
                     try {
-                        if (!catalog.CatalogItems.Any())
+                        if (!catalog.Any())
                             throw new Exception("Таких товаров нет.");
                         Console.WriteLine("*** Все товары ***");
                         Console.WriteLine("-------------------------------");
-                        foreach (var item in catalog.CatalogItems
+                        foreach (var item in catalog
                             .Where(w => w.GetType() == typeof(Magazine)).Cast<Magazine>()) {
                                 Console.WriteLine(item);
                         }
-                        foreach (var item in catalog.CatalogItems
+                        foreach (var item in catalog
                             .Where(w => w.GetType() == typeof(Book)).Cast<Book>()) {
                                 Console.WriteLine(item);
                         }

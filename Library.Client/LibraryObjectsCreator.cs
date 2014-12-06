@@ -1,5 +1,5 @@
 ﻿using System;
-using Library.Catalog;
+using Library.Catalog.Model;
 
 namespace Library.Client
 {
@@ -8,12 +8,12 @@ namespace Library.Client
         public static Book CreateBook(Book book = null)
         {
             string name;
-            int year;
+            DateTime year;
             GetGeneralData(out name, out year);
             Console.Write("Автора: ");
             var author = Console.ReadLine();
 
-            if (book == null) return new Book(name, year, author);
+            if (book == null) return new Book(name.Trim(), year, author.Trim());
             book.Name = name;
             book.CreationYear = year;
             book.Author = author;
@@ -23,7 +23,8 @@ namespace Library.Client
         public static Magazine CreateMagazine(Magazine magazine = null)
         {
             string name;
-            int year, numberOfIssue;
+            DateTime year;
+            int numberOfIssue;
             GetGeneralData(out name, out year);
             Console.Write("Номер выпуска: ");
             var temp = Console.ReadLine();
@@ -32,25 +33,27 @@ namespace Library.Client
                 Console.Write("Номер выпуска: ");
                 temp = Console.ReadLine();
             }
-            if (magazine == null) return new Magazine(name, year, numberOfIssue);
+            if (magazine == null) return new Magazine(name.Trim(), year, numberOfIssue);
             magazine.Name = name;
             magazine.CreationYear = year;
             magazine.NumberOfIssue = numberOfIssue;
             return magazine;
         }
 
-        private static void GetGeneralData(out string name, out int creationYear)
+        private static void GetGeneralData(out string name, out DateTime creationYear)
         {
+            int year;
             Console.WriteLine("Ведите данные.");
             Console.Write("Название: ");
             name = Console.ReadLine();
             Console.Write("Год выпуска: ");
             var temp = Console.ReadLine();
-            while (!int.TryParse(temp, out creationYear)) {
+            while (!int.TryParse(temp, out year)) {
                 Console.WriteLine("\nНеверный год выпуска!\n");
                 Console.Write("Год выпуска: ");
                 temp = Console.ReadLine();
             }
+            creationYear = new DateTime(year);
         }
     }
 }
